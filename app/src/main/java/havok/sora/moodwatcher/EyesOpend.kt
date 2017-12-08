@@ -1,16 +1,27 @@
 package havok.sora.moodwatcher
 
+import android.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import kotlinx.android.synthetic.main.activity_eyes_opend.*
-import android.graphics.BitmapFactory
 import android.util.Log
+import com.google.android.gms.vision.Frame
+import com.google.android.gms.vision.face.FaceDetector
 import com.wonderkiln.camerakit.CameraKitEventListener
 import com.wonderkiln.camerakit.CameraKitVideo
 import com.wonderkiln.camerakit.CameraKitImage
 import com.wonderkiln.camerakit.CameraKitError
 import com.wonderkiln.camerakit.CameraKitEvent
+import android.graphics.drawable.BitmapDrawable
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.R.attr.y
+import android.R.attr.x
+import android.graphics.*
+import java.nio.file.Files.size
+
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -18,10 +29,11 @@ import com.wonderkiln.camerakit.CameraKitEvent
  */
 class EyesOpened : AppCompatActivity() {
 
-    val timeBetweenPicMs = 1000L //milliseconds
+    val timeBetweenPicMs = 2000L //milliseconds
     val cameraHandler = Handler()
 
     var currentImage = ByteArray(0)
+    var faceDetector : FaceDetector? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +48,16 @@ class EyesOpened : AppCompatActivity() {
         }
         addCameraListener()
 
-
+        faceDetector = FaceDetector.Builder(applicationContext)
+                .setTrackingEnabled(false)
+                .setClassificationType(FaceDetector.ACCURATE_MODE)
+                .build()
+        if (!faceDetector!!.isOperational) {
+            AlertDialog.Builder(applicationContext)
+                    .setMessage("Could not set up the face detector!")
+                    .show()
+            return
+        }
     }
 
     private fun addSwitchListener() {
@@ -58,6 +79,11 @@ class EyesOpened : AppCompatActivity() {
     }
 
     private fun addCameraListener() {
+        val myRectPaint = Paint()
+        myRectPaint.strokeWidth = 5f
+        myRectPaint.color = Color.RED
+        myRectPaint.style = Paint.Style.STROKE
+
         cameraView.addCameraKitListener(object : CameraKitEventListener {
             override fun onEvent(cameraKitEvent: CameraKitEvent) {
                 val jpeg = cameraKitEvent.message
@@ -74,8 +100,23 @@ class EyesOpened : AppCompatActivity() {
                 Log.i("Camera", "In onImage")
                 currentImage = cameraKitImage.jpeg // will return byte[]
                 Log.i("Camera", currentImage.contentToString())
-                val img = BitmapFactory.decodeByteArray(currentImage, 0, currentImage.size)
-                imageView.setImageBitmap(img)
+                val options = BitmapFactory.Options()
+                options.inMutable = true
+                val img = BitmapFactory.decodeByteArray(currentImage, 0, currentImage.size, options )
+                val tempCanvas = Canvas(img)
+                tempCanvas.drawBitmap(img, 0f, 0f, null)
+                val frame = Frame.Builder().setBitmap(img).build()
+                val faces = faceDetector!!.detect(frame)
+                for (i in 0 until faces.size()) {
+                    val thisFace = faces.valueAt(i)
+                    val x1 = thisFace.position.x
+                    val y1 = thisFace.position.y
+                    val x2 = x1 + thisFace.width
+                    val y2 = y1 + thisFace.height
+
+                    tempCanvas.drawRoundRect(RectF(x1, y1, x2, y2), 2f, 2f, myRectPaint)
+                }
+                imageView.setImageDrawable(BitmapDrawable(resources, img))
             }
 
             override fun onVideo(video: CameraKitVideo?) {}
