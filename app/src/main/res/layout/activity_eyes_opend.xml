@@ -41,21 +41,19 @@
             android:id="@+id/toggleCamButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:checked="false"
+            android:textOff="Selfie Cam"
+            android:textOn="Normal Cam" />
 
-        <Switch
+        <ToggleButton
             android:id="@+id/helpingSwitch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Helping" />
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </android.support.constraint.ConstraintLayout>
+            android:checked="false"
+            android:textOff="Pics?"
+            android:textOn="Capturing" />
 
     </LinearLayout>
 

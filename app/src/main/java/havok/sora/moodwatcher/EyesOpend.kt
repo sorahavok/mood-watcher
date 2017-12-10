@@ -34,9 +34,6 @@ class EyesOpened : AppCompatActivity() {
         setContentView(R.layout.activity_eyes_opend)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        toggleCamButton.textOn = "Normal Cam"
-        toggleCamButton.textOff = "Selfie Cam"
-
         addSwitchListener()
         toggleCamButton.setOnCheckedChangeListener({ _, _ ->
             Log.i("toggleCamButton", "toggleCamButton Hit!")
