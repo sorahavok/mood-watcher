@@ -14,14 +14,8 @@ import com.wonderkiln.camerakit.CameraKitImage
 import com.wonderkiln.camerakit.CameraKitError
 import com.wonderkiln.camerakit.CameraKitEvent
 import android.graphics.drawable.BitmapDrawable
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.R.attr.y
-import android.R.attr.x
 import android.graphics.*
-import java.nio.file.Files.size
-
-
+import com.google.android.gms.vision.face.Face
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -37,11 +31,26 @@ class EyesOpened : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_eyes_opend)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        toggleCamButton.textOn = "Normal Cam"
+        toggleCamButton.textOff = "Selfie Cam"
+
         addSwitchListener()
+        toggleCamButton.setOnCheckedChangeListener({ _, _ ->
+            Log.i("toggleCamButton", "toggleCamButton Hit!")
+            if(helpingSwitch.isChecked) {
+                helpingSwitch.toggle()
+                // Sleep to let the last picture finish being taken
+                Thread.sleep(timeBetweenPicMs)
+                cameraView.toggleFacing()
+                helpingSwitch.toggle()
+            } else {
+                cameraView.toggleFacing()
+            }
+
+        })
 
         if (cameraView.isFacingBack) {
             cameraView.toggleFacing()
@@ -50,6 +59,7 @@ class EyesOpened : AppCompatActivity() {
 
         faceDetector = FaceDetector.Builder(applicationContext)
                 .setTrackingEnabled(false)
+                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
                 .setClassificationType(FaceDetector.ACCURATE_MODE)
                 .build()
         if (!faceDetector!!.isOperational) {
@@ -74,7 +84,6 @@ class EyesOpened : AppCompatActivity() {
             } else {
                 cameraHandler.removeCallbacksAndMessages(null)
             }
-            true
         })
     }
 
@@ -83,6 +92,11 @@ class EyesOpened : AppCompatActivity() {
         myRectPaint.strokeWidth = 5f
         myRectPaint.color = Color.RED
         myRectPaint.style = Paint.Style.STROKE
+
+        val landmarkDotsPaint = Paint()
+        landmarkDotsPaint.strokeWidth = 2f
+        landmarkDotsPaint.color = Color.GREEN
+        landmarkDotsPaint.style = Paint.Style.STROKE
 
         cameraView.addCameraKitListener(object : CameraKitEventListener {
             override fun onEvent(cameraKitEvent: CameraKitEvent) {
@@ -107,16 +121,31 @@ class EyesOpened : AppCompatActivity() {
                 tempCanvas.drawBitmap(img, 0f, 0f, null)
                 val frame = Frame.Builder().setBitmap(img).build()
                 val faces = faceDetector!!.detect(frame)
+                Log.i("On Image", "Got ${faces.size()} faces.")
                 for (i in 0 until faces.size()) {
                     val thisFace = faces.valueAt(i)
-                    val x1 = thisFace.position.x
-                    val y1 = thisFace.position.y
-                    val x2 = x1 + thisFace.width
-                    val y2 = y1 + thisFace.height
+                    drawRedBoundingBox(thisFace, tempCanvas)
+                    drawFaceLandmarks(thisFace, tempCanvas)
 
-                    tempCanvas.drawRoundRect(RectF(x1, y1, x2, y2), 2f, 2f, myRectPaint)
                 }
                 imageView.setImageDrawable(BitmapDrawable(resources, img))
+            }
+
+            private fun drawFaceLandmarks(face: Face, canvas: Canvas) {
+                for (landmark in face.landmarks) {
+                    Log.i("drawFaceLandmarks", "Got ${face.landmarks.size} landmarks.")
+                    val cx = (landmark.position.x)
+                    val cy = (landmark.position.y)
+                    canvas.drawCircle(cx, cy, 20f, landmarkDotsPaint)
+                }
+            }
+
+            private fun drawRedBoundingBox(thisFace: Face, tempCanvas: Canvas) {
+                val x1 = thisFace.position.x
+                val y1 = thisFace.position.y
+                val x2 = x1 + thisFace.width
+                val y2 = y1 + thisFace.height
+                tempCanvas.drawRect(x1, y1, x2, y2, myRectPaint)
             }
 
             override fun onVideo(video: CameraKitVideo?) {}

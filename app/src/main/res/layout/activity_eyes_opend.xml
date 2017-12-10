@@ -35,15 +35,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:background="@color/black_overlay"
-        android:orientation="horizontal"
         tools:ignore="UselessParent">
 
-        <android.support.constraint.ConstraintLayout
+        <ToggleButton
+            android:id="@+id/toggleCamButton"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </android.support.constraint.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <Switch
             android:id="@+id/helpingSwitch"
