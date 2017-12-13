@@ -1,0 +1,20 @@
+syntax = "proto2";
+
+package havok.sora.moodwatcher;
+
+message CameraData {
+    repeated Face face = 1;
+}
+
+message Face {
+    optional float smiling = 1;
+    optional float leftEyeClosed = 2;
+    optional float rightEyeClosed = 3;
+    repeated Landmarks landmarks = 4;
+}
+
+message Landmarks {
+    optional int32 type = 1;
+    optional float x = 2;
+    optional float y = 3;
+}
