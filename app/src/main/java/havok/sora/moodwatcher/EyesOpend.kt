@@ -53,11 +53,11 @@ class EyesOpened : AppCompatActivity() {
             cameraView.toggleFacing()
         }
         addCameraListener()
-
         faceDetector = FaceDetector.Builder(applicationContext)
                 .setTrackingEnabled(false)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
-                .setClassificationType(FaceDetector.ACCURATE_MODE)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setMode(FaceDetector.ACCURATE_MODE)
                 .build()
         if (!faceDetector!!.isOperational) {
             AlertDialog.Builder(applicationContext)
@@ -123,7 +123,7 @@ class EyesOpened : AppCompatActivity() {
                     val thisFace = faces.valueAt(i)
                     drawRedBoundingBox(thisFace, tempCanvas)
                     drawFaceLandmarks(thisFace, tempCanvas)
-
+                    logEyesAndSmile(thisFace)
                 }
                 imageView.setImageDrawable(BitmapDrawable(resources, img))
             }
@@ -147,6 +147,12 @@ class EyesOpened : AppCompatActivity() {
 
             override fun onVideo(video: CameraKitVideo?) {}
         })
+    }
+
+    private fun logEyesAndSmile(face: Face) {
+        Log.w("logEyesAndSmile", "Left Eye Open: ${face.isLeftEyeOpenProbability}")
+        Log.w("logEyesAndSmile", "Right Eye Open: ${face.isRightEyeOpenProbability}")
+        Log.w("logEyesAndSmile", "Smile: ${face.isSmilingProbability}")
     }
 
     override fun onResume() {
