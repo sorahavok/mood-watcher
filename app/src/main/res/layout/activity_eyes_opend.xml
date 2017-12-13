@@ -37,23 +37,97 @@
         android:background="@color/black_overlay"
         tools:ignore="UselessParent">
 
-        <ToggleButton
-            android:id="@+id/toggleCamButton"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_weight="1"
-            android:checked="false"
-            android:textOff="Selfie Cam"
-            android:textOn="Normal Cam" />
+            android:orientation="vertical">
 
-        <ToggleButton
-            android:id="@+id/helpingSwitch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="false"
-            android:textOff="Pics?"
-            android:textOn="Capturing" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <RadioGroup
+                    android:id="@+id/moodRadio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:checkedButton="@+id/NoneRadio"
+                    android:orientation='horizontal'>
+
+                    <RadioButton
+                        android:id="@+id/sadRadio"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="☹️" />
+
+                    <RadioButton
+                        android:id="@+id/disgustRadio"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="🤢" />
+
+                    <RadioButton
+                        android:id="@+id/happyRadio"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="😁" />
+
+                    <RadioButton
+                        android:id="@+id/scaredRadio"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="😨" />
+
+                    <RadioButton
+                        android:id="@+id/madRadio"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="😠" />
+
+                    <RadioButton
+                        android:id="@+id/NoneRadio"
+                        android:layout_width="275dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="None" />
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="99dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ToggleButton
+                    android:id="@+id/helpingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:textOff="Pics?"
+                    android:textOn="Capturing" />
+
+                <ToggleButton
+                    android:id="@+id/toggleCamButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:textOff="Selfie Cam"
+                    android:textOn="Normal Cam" />
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
