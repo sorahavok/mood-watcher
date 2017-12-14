@@ -1,4 +1,4 @@
-package havok.sora.moodwatcher
+package ai.havok.sora.faceai
 
 import org.junit.Test
 

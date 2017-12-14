@@ -1,27 +1,22 @@
-package havok.sora.moodwatcher
+package ai.havok.sora.faceai
 
 import android.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.os.Handler
-import kotlinx.android.synthetic.main.activity_eyes_opend.*
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.android.gms.vision.Frame
-import com.google.android.gms.vision.face.FaceDetector
-import com.wonderkiln.camerakit.CameraKitEventListener
-import com.wonderkiln.camerakit.CameraKitVideo
-import com.wonderkiln.camerakit.CameraKitImage
-import com.wonderkiln.camerakit.CameraKitError
-import com.wonderkiln.camerakit.CameraKitEvent
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.*
 import com.google.android.gms.vision.face.Face
+import com.google.android.gms.vision.face.FaceDetector
+import com.wonderkiln.camerakit.*
+import kotlinx.android.synthetic.main.activity_raw_camera.*
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
-class EyesOpened : AppCompatActivity() {
+class RawCamera : AppCompatActivity() {
 
     val timeBetweenPicMs = 2000L //milliseconds
     val cameraHandler = Handler()
@@ -31,9 +26,7 @@ class EyesOpened : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_eyes_opend)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        setContentView(R.layout.activity_raw_camera)
         addSwitchListener()
         toggleCamButton.setOnCheckedChangeListener({ _, _ ->
             Log.i("toggleCamButton", "toggleCamButton Hit!")
