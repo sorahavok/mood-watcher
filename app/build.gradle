@@ -1,3 +1,5 @@
+def grpcVersion = '1.8.0'
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -39,9 +41,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'com.google.android.gms:play-services-vision:11.6.2'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.0'
+
+    compile 'com.google.android.gms:play-services-vision:11.8.0'
     compile 'com.wonderkiln:camerakit:0.12.3'
-    compile 'com.google.protobuf:protobuf-lite:3.0.0'
+    compile 'com.google.protobuf:protobuf-lite:3.0.1'
+
+    compile "io.grpc:grpc-netty:${grpcVersion}"
+    compile "io.grpc:grpc-protobuf:${grpcVersion}"
+    compile "io.grpc:grpc-stub:${grpcVersion}"
+
+    testCompile "io.grpc:grpc-testing:${grpcVersion}"
 }
 
 protobuf {
@@ -54,6 +64,9 @@ protobuf {
             // The codegen for lite comes as a separate artifact
             artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
         }
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
     }
     generateProtoTasks {
         all().each { task ->
@@ -64,6 +77,7 @@ protobuf {
             }
             task.plugins {
                 javalite { }
+                grpc { }
             }
         }
     }
