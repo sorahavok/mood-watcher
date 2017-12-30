@@ -88,7 +88,7 @@
                         android:text="😠" />
 
                     <RadioButton
-                        android:id="@+id/NoneRadio"
+                        android:id="@+id/noneRadio"
                         android:layout_width="275dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
