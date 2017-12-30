@@ -16,6 +16,7 @@ import com.google.android.gms.vision.face.FaceDetector
 import com.wonderkiln.camerakit.*
 import kotlinx.android.synthetic.main.activity_raw_camera.*
 
+
 class RawCamera : AppCompatActivity() {
 
     val timeBetweenPicMs = 2000L //milliseconds
@@ -24,28 +25,21 @@ class RawCamera : AppCompatActivity() {
     var currentImage = ByteArray(0)
     var faceDetector : FaceDetector? = null
 
+    private var userFaceState = FaceState.NONE
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_raw_camera)
         addSwitchListener()
-        toggleCamButton.setOnCheckedChangeListener({ _, _ ->
-            Log.i("toggleCamButton", "toggleCamButton Hit!")
-            if(helpingSwitch.isChecked) {
-                helpingSwitch.toggle()
-                // Sleep to let the last picture finish being taken
-                Thread.sleep(timeBetweenPicMs)
-                cameraView.toggleFacing()
-                helpingSwitch.toggle()
-            } else {
-                cameraView.toggleFacing()
-            }
-
-        })
-
-        if (cameraView.isFacingBack) {
-            cameraView.toggleFacing()
-        }
+        addToggleCamButtonListener()
+        addMoodRadioListener()
         addCameraListener()
+        initFaceDetector()
+
+        cameraView.facing = CameraKit.Constants.FACING_FRONT
+    }
+
+    private fun initFaceDetector() {
         faceDetector = FaceDetector.Builder(applicationContext)
                 .setTrackingEnabled(false)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
@@ -58,6 +52,34 @@ class RawCamera : AppCompatActivity() {
                     .show()
             return
         }
+    }
+
+    private fun addMoodRadioListener() {
+        moodRadio.setOnCheckedChangeListener({ _, checkedRadioButtonId ->
+            userFaceState = when (checkedRadioButtonId) {
+                sadRadio.id -> FaceState.SAD
+                happyRadio.id -> FaceState.HAPPY
+                madRadio.id -> FaceState.MAD
+                scaredRadio.id -> FaceState.SCARED
+                disgustRadio.id -> FaceState.DISGUST
+                noneRadio.id -> FaceState.NONE
+                else -> FaceState.UNRECOGNIZED
+            }
+            Log.e("setOnCheckedChangeListener", "User Face State is now $userFaceState")
+        })
+    }
+
+    private fun addToggleCamButtonListener() {
+        toggleCamButton.setOnCheckedChangeListener({ _, _ ->
+            Log.i("toggleCamButton", "toggleCamButton Hit!")
+            if (helpingSwitch.isChecked) {
+                helpingSwitch.toggle()
+                // Sleep to let the last picture finish being taken
+                Thread.sleep(timeBetweenPicMs)
+                helpingSwitch.toggle()
+            }
+            cameraView.toggleFacing()
+        })
     }
 
     private fun addSwitchListener() {
@@ -116,7 +138,7 @@ class RawCamera : AppCompatActivity() {
                     val thisFace = faces.valueAt(i)
                     drawRedBoundingBox(thisFace, tempCanvas)
                     drawFaceLandmarks(thisFace, tempCanvas)
-                    logEyesAndSmile(thisFace)
+                    convertFaceToProto(thisFace)
                 }
                 imageView.setImageDrawable(BitmapDrawable(resources, img))
             }
@@ -142,10 +164,18 @@ class RawCamera : AppCompatActivity() {
         })
     }
 
-    private fun logEyesAndSmile(face: Face) {
-        Log.w("logEyesAndSmile", "Left Eye Open: ${face.isLeftEyeOpenProbability}")
-        Log.w("logEyesAndSmile", "Right Eye Open: ${face.isRightEyeOpenProbability}")
-        Log.w("logEyesAndSmile", "Smile: ${face.isSmilingProbability}")
+    private fun convertFaceToProto(face: Face): ai.havok.sora.faceai.Face? {
+        val faceProto = ai.havok.sora.faceai.Face.newBuilder()
+                .setAiInfo(AiInfo.newBuilder()
+                        .setLeftEyeOpen(face.isLeftEyeOpenProbability)
+                        .setRightEyeOpen(face.isRightEyeOpenProbability)
+                        .setIsSmiling(face.isSmilingProbability)
+                ).setOrientation(Orientation.newBuilder()
+                ).setUserInput(UserInput.newBuilder()
+                        .setFaceState(userFaceState)
+                ).build()
+        Log.w("logEyesAndSmile", "Face Proto: $faceProto")
+        return faceProto
     }
 
     override fun onResume() {
