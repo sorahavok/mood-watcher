@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.protobuf'
+apply plugin: 'kotlin-kapt'
 
 buildscript {
     repositories {
@@ -14,23 +15,22 @@ buildscript {
     }
 }
 
+//compileDebugKotlin.dependsOn ':generateProto'
+
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "ai.havok.sora.faceai"
         minSdkVersion 26
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     sourceSets {
-        main {
-            java {
-                srcDirs += "$projectDir/build/generated/source/proto/debug/javalite"
-                srcDirs += "$projectDir/build/generated/source/proto/debug/grpc"
-            }
-        }
+        main.java.srcDirs += "$projectDir/build/generated/source/proto/debug/javalite"
+        main.java.srcDirs += "$projectDir/build/generated/source/proto/debug/grpc"
+
     }
     buildTypes {
         release {
@@ -48,8 +48,8 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     implementation 'com.google.android.gms:play-services-vision:11.8.0'
@@ -96,3 +96,4 @@ protobuf {
         }
     }
 }
+
