@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "ai.havok.sora.faceai";
+option java_outer_classname = "CameraProto";
+
+package camera;
+
+//// The greeting service definition.
+//service Greeter {
+//    // Sends a greeting
+//    rpc SayHello (HelloRequest) returns (HelloReply) {}
+//}
+
+message Face {
+    Orientation orientation = 1;
+    AiInfo ai_info = 2;
+    UserInput user_input = 3;
+}
+
+message Orientation {
+
+}
+
+message AiInfo {
+    float left_eye_open = 1;
+    float right_eye_open = 2;
+    float is_smiling = 3;
+}
+
+message UserInput {
+    FaceState face_state = 1;
+}
+
+enum FaceState {
+    NONE = 0;
+    SAD = 1;
+    DISGUST = 2;
+    HAPPY = 3;
+    SCARED = 4;
+    MAD = 5;
+}
