@@ -16,112 +16,102 @@
     <com.wonderkiln.camerakit.CameraView
         android:id="@+id/cameraView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:adjustViewBounds="true"
-        android:visibility="invisible" >
+        android:visibility="invisible">
 
     </com.wonderkiln.camerakit.CameraView>
 
     <LinearLayout
         android:id="@+id/fullscreen_content_controls"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_gravity="bottom|center_horizontal"
         android:background="@color/black_overlay"
-        tools:ignore="UselessParent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="525dp">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <RadioGroup
+                android:id="@+id/moodRadio"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:checkedButton="@+id/NoneRadio"
+                android:orientation='horizontal'>
 
-                <RadioGroup
-                    android:id="@+id/moodRadio"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <RadioButton
+                    android:id="@+id/sadRadio"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:checkedButton="@+id/NoneRadio"
-                    android:orientation='horizontal'>
+                    android:text="☹️" />
 
-                    <RadioButton
-                        android:id="@+id/sadRadio"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="☹️" />
+                <RadioButton
+                    android:id="@+id/disgustRadio"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🤢" />
 
-                    <RadioButton
-                        android:id="@+id/disgustRadio"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="🤢" />
+                <RadioButton
+                    android:id="@+id/happyRadio"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="😁" />
 
-                    <RadioButton
-                        android:id="@+id/happyRadio"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="😁" />
+                <RadioButton
+                    android:id="@+id/scaredRadio"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="😨" />
 
-                    <RadioButton
-                        android:id="@+id/scaredRadio"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="😨" />
+                <RadioButton
+                    android:id="@+id/madRadio"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="😠" />
 
-                    <RadioButton
-                        android:id="@+id/madRadio"
-                        android:layout_width="250dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="😠" />
+                <RadioButton
+                    android:id="@+id/noneRadio"
+                    android:layout_width="275dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="None" />
+            </RadioGroup>
 
-                    <RadioButton
-                        android:id="@+id/noneRadio"
-                        android:layout_width="275dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="None" />
-                </RadioGroup>
+        </LinearLayout>
 
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <ToggleButton
+                android:id="@+id/helpingSwitch"
                 android:layout_width="match_parent"
-                android:layout_height="99dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:checked="false"
+                android:textOff="Pics?"
+                android:textOn="Capturing" />
 
-                <ToggleButton
-                    android:id="@+id/helpingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="false"
-                    android:textOff="Pics?"
-                    android:textOn="Capturing" />
-
-                <ToggleButton
-                    android:id="@+id/toggleCamButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="false"
-                    android:textOff="Selfie Cam"
-                    android:textOn="Normal Cam" />
-            </LinearLayout>
-
+            <ToggleButton
+                android:id="@+id/toggleCamButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:textOff="Selfie Cam"
+                android:textOn="Normal Cam" />
         </LinearLayout>
 
     </LinearLayout>

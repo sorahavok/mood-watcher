@@ -48,7 +48,7 @@ class RawCamera : AppCompatActivity() {
         cameraView.stop()
         super.onPause()
     }
-    
+
     private fun initFaceDetector() {
         faceDetector = FaceDetector.Builder(applicationContext)
                 .setTrackingEnabled(false)
