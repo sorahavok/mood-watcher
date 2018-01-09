@@ -15,8 +15,6 @@ buildscript {
     }
 }
 
-//compileDebugKotlin.dependsOn ':generateProto'
-
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -26,11 +24,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     sourceSets {
+        main.proto.srcDirs += "$projectDir/src/main/proto"
         main.java.srcDirs += "$projectDir/build/generated/source/proto/debug/javalite"
         main.java.srcDirs += "$projectDir/build/generated/source/proto/debug/grpc"
-
     }
     buildTypes {
         release {
@@ -96,4 +95,3 @@ protobuf {
         }
     }
 }
-
