@@ -85,7 +85,6 @@ class RawCamera : AppCompatActivity() {
     private fun addSwitchListener() {
         helpingSwitch.setOnCheckedChangeListener({ _, isChecked ->
             cameraView.captureImage()
-            print("The button is Checked: " + isChecked)
             if(isChecked) {
                 cameraHandler.postDelayed(object : Runnable {
                     override fun run() {
@@ -122,10 +121,8 @@ class RawCamera : AppCompatActivity() {
             }
 
             override fun onImage(cameraKitImage: CameraKitImage) {
-                print(cameraKitImage.toString())
                 Log.i("Camera", "In onImage")
                 currentImage = cameraKitImage.jpeg // will return byte[]
-                Log.i("Camera", currentImage.contentToString())
                 val options = BitmapFactory.Options()
                 options.inMutable = true
                 val img = BitmapFactory.decodeByteArray(currentImage, 0, currentImage.size, options )
@@ -138,7 +135,8 @@ class RawCamera : AppCompatActivity() {
                     val thisFace = faces.valueAt(i)
                     drawRedBoundingBox(thisFace, tempCanvas)
                     drawFaceLandmarks(thisFace, tempCanvas)
-                    convertFaceToProto(thisFace)
+                    val faceProto = FaceProtoHelper.convertFaceToProto(thisFace, userFaceState)
+                    Log.w("onImage", "Face Proto: $faceProto")
                 }
                 imageView.setImageDrawable(BitmapDrawable(resources, img))
             }
@@ -162,20 +160,6 @@ class RawCamera : AppCompatActivity() {
 
             override fun onVideo(video: CameraKitVideo?) {}
         })
-    }
-
-    private fun convertFaceToProto(face: Face): ai.havok.sora.faceai.Face? {
-        val faceProto = ai.havok.sora.faceai.Face.newBuilder()
-                .setAiInfo(AiInfo.newBuilder()
-                        .setLeftEyeOpen(face.isLeftEyeOpenProbability)
-                        .setRightEyeOpen(face.isRightEyeOpenProbability)
-                        .setIsSmiling(face.isSmilingProbability)
-                ).setOrientation(Orientation.newBuilder()
-                ).setUserInput(UserInput.newBuilder()
-                        .setFaceState(userFaceState)
-                ).build()
-        Log.w("logEyesAndSmile", "Face Proto: $faceProto")
-        return faceProto
     }
 
     override fun onResume() {
