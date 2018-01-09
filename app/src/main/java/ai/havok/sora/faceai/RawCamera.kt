@@ -19,11 +19,11 @@ import kotlinx.android.synthetic.main.activity_raw_camera.*
 
 class RawCamera : AppCompatActivity() {
 
-    val timeBetweenPicMs = 2000L //milliseconds
-    val cameraHandler = Handler()
+    private val timeBetweenPicMs = 2000L //milliseconds
+    private val cameraHandler = Handler()
 
-    var currentImage = ByteArray(0)
-    var faceDetector : FaceDetector? = null
+    private var currentImage = ByteArray(0)
+    private var faceDetector : FaceDetector? = null
 
     private var userFaceState = FaceState.NONE
 
@@ -39,6 +39,16 @@ class RawCamera : AppCompatActivity() {
         cameraView.facing = CameraKit.Constants.FACING_FRONT
     }
 
+    override fun onResume() {
+        super.onResume()
+        cameraView.start()
+    }
+
+    override fun onPause() {
+        cameraView.stop()
+        super.onPause()
+    }
+    
     private fun initFaceDetector() {
         faceDetector = FaceDetector.Builder(applicationContext)
                 .setTrackingEnabled(false)
@@ -144,9 +154,9 @@ class RawCamera : AppCompatActivity() {
             private fun drawFaceLandmarks(face: Face, canvas: Canvas) {
                 for (landmark in face.landmarks) {
                     Log.i("drawFaceLandmarks", "Got ${face.landmarks.size} landmarks.")
-                    val cx = (landmark.position.x)
-                    val cy = (landmark.position.y)
-                    canvas.drawCircle(cx, cy, 20f, landmarkDotsPaint)
+                    val landmarkX = landmark.position.x
+                    val landmarkY = landmark.position.y
+                    canvas.drawCircle(landmarkX, landmarkY, 20f, landmarkDotsPaint)
                 }
             }
 
@@ -160,15 +170,5 @@ class RawCamera : AppCompatActivity() {
 
             override fun onVideo(video: CameraKitVideo?) {}
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        cameraView.start()
-    }
-
-    override fun onPause() {
-        cameraView.stop()
-        super.onPause()
     }
 }
